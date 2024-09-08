@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load webp %}
+
+
+
+{% block content %}
+<div class="search">
+    <div class="search_bar">
+        <input type="text" placeholder="Search" name="search_text" autocomplete="off">
+        <button id="search_button">
+            <span class="material-symbols-outlined">search</span>
+        </button>
+    </div>
+</div>
+<div class="filters_mobile">
+    <div class="categories">
+        <h4>Category:</h4>
+        <select class="category-select">
+            <option value="" selected>All</option>
+            {% for category in categories %}
+            <option value="{{ category.slug }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="price-range-wrapper">
+        <h4>Price Range:</h4>
+        <div class="price-range">
+            <input type="number" placeholder="From" name="min-price">
+            <input type="number" placeholder="To" name="max-price">
+        </div>
+    </div>
+    <div class="sort-filters-wrapper">
+        <h4>Sort by:</h4>
+        <select class="sort-select">
+            <option value="-price">Most Expensive</option>
+            <option value="price">Least Expensive</option>
+            <option value="-date" selected>Newest</option>
+            <option value="date">Oldest</option>
+        </select>
+    </div>
+</div>
+<div class="categories-products-wrapper">
+    <div class="filters">
+        <div class="categories">
+            <h4>Category:</h4>
+            <div class="categories_container">
+                <div class="category-wrapper">
+                    <input type="radio" name="category-name" value="" checked>
+                    <label>All</label>
+                </div>
+                {% for category in categories %}
+                <div class="category-wrapper">
+                    <input type="radio" name="category-name" value="{{ category.slug }}">
+                    <label>{{ category.name }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="price-range-wrapper">
+            <h4>Price Range:</h4>
+            <div class="price-range">
+                <input type="number" placeholder="From" name="min-price">
+                <input type="number" placeholder="To" name="max-price">
+            </div>
+        </div>
+        <div class="sort-filters-wrapper">
+            <h4>Sort by:</h4>
+            <div class="sort-filters">
+                <div class="filter-wrapper">
+                    <input type="radio" name="filter-name" value="-price">
+                    <label>Most Expensive</label>
+                </div>
+                <div class="filter-wrapper">
+                    <input type="radio" name="filter-name" value="price">
+                    <label>Least Expensive</label>
+                </div>
+                <div class="filter-wrapper">
+                    <input type="radio" name="filter-name" value="-date" checked>
+                    <label>Newest</label>
+                </div>
+                <div class="filter-wrapper">
+                    <input type="radio" name="filter-name" value="date">
+                    <label>Oldest</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="products_container">
+        <!---->
+        {% for product in products %} 
+        <a href="/product_page/{{ product.id }}">
+            <div class="product">
+                <!--<img src="{{ product.image.all.0.image.url }}" onerror="if (this.src != '{% get_media_prefix %}fallback.png') this.src = '{% get_media_prefix %}fallback.png';">-->
+                <img src="{% webp product.image.all.0.image.url %}">
+                <div class="product-info">
+                    <h4 class="product_title">{{ product.title }}</h4>
+                    <p>Price: <span>{{ product.price }}</span>$</p>
+                    <p>{{ product.date }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<script src="{% static 'js/products-filter.js' %}"></script>
+<script src="{% static 'js/process-cart-functions.js' %}"></script>
+{% endblock %}

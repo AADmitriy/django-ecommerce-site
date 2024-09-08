@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="payment-page-wrapper">
+    <div class="page-loader"></div>
+    <div class="order-forms">
+        <form method="POST" class="order-info-form">
+            {% csrf_token %}
+            <div class="shipping-info">
+                <h3>Contact</h3>
+                <div class="shipping-contact-info">
+                    {{ contact_form.email }}
+                </div>
+                <div class="get-news-wrapper">
+                    <input type="checkbox" id="get-news-checkbox">
+                    <label>Write me news and offers</label>
+                </div>
+            </div>
+            <div class="shipping-info">
+                <h3>Shipping</h3>
+                {% if user_addreses %}
+                <select id="user_addreses_select">
+                    {% for address in user_addreses %}
+                    <option value="{{address.id}}">
+                        {{ address.country.name }}, {{ address.city }}, {{ address.address }}, {{ address.zipCode }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                <div class="shipping-address-info">
+                    {{ address_form.country }}
+                    <div class="name-input-wrapper">
+                        {{ contact_form.firstname }}
+                        {{ contact_form.lastname }}
+                    </div>
+                    {{ address_form.address }}
+                    {{ address_form.zipCode }}
+                    {{ address_form.city }}
+                    {{ contact_form.phoneNumber }}
+                </div>
+            </div>
+            <div class="payment-method">
+                <h3>Payment method</h3>
+                <div class="payment-form">
+                    <div class="card-choice">
+                        <input type="radio" name="card-choice" value="stripe" required>
+                        <p>Stripe</p>
+                    </div>
+                    <div class="cart-choice-description">
+                        <p>You will be asked to enter you card information on site after submiting form</p>
+                    </div>
+                    <div class="card-choice">
+                        <input type="radio" name="card-choice" value="paypal" required>
+                        <p>PayPal</p>
+                    </div>
+                    <div class="cart-choice-description">
+                        <p>You will be redirected to your card after submiting form</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-wrapper-inform">
+                <div class="checkout">
+                    <div class="product-list">
+                    </div>
+                    <div class="products-price">
+                        <p class="info-text">Intermediate summary</p>
+                        <p><span class="mid-summary">{{ cart_products_price }}</span> $</p>
+                    </div>
+                    <div class="shipping-price-wrapper">
+                        <p class="info-text">Shipping Price</p>
+                        <p><span class="shipping-price">{{ shipping_price }}</span> $</p>
+                    </div>
+                    <div class="total-sum-wrapper">
+                        <p class="sum-label">In total</p>
+                        <p class="total-price"><span>{{ total_price }}</span> $</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="pay-button" type="submit">Pay Now</button>
+        </form>
+        <div class="paypal-form">
+            {{ paypal_form.render }}
+        </div>
+    </div>
+    <div class="checkout-wrapper">
+        <div class="checkout">
+            <div class="product-list">
+                <!--
+                <div class="checkout-product">
+                    <div class="product-image-wrapper">
+                        <img src="." onerror="if (this.src != '{% get_media_prefix %}fallback.png') this.src = '{% get_media_prefix %}fallback.png';">
+                        <label class="quantity-number">1</label>
+                    </div>
+                    <p class="checkout-product-title">Product title</p>
+                    <p class="checkout-product-price">$ 10.00</p>
+                </div>
+                -->
+            </div>
+            <div class="products-price"><!--jfkdfjklasf-->
+                <p class="info-text">Intermediate summary</p>
+                <p><span class="mid-summary">{{ cart_products_price }}</span> $</p>
+            </div>
+            <div class="shipping-price-wrapper">
+                <p class="info-text">Shipping Price</p>
+                <p><span class="shipping-price">{{ shipping_price }}</span> $</p>
+            </div>
+            <div class="total-sum-wrapper">
+                <p class="sum-label">In total</p>
+                <p class="total-price"><span >{{ total_price }}</span> $</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var addresses_dict = {
+        {% for address in user_addreses %}
+        '{{address.id}}': {
+                'country_id': '{{ address.country.id }}', 
+                'city': '{{ address.city }}', 
+                'address': '{{ address.address }}',
+                'zipCode': '{{ address.zipCode }}'
+        },
+        {% endfor %}
+    }
+</script>
+<script src="{% static 'js/orders.js' %}"></script>
+{% endblock %}

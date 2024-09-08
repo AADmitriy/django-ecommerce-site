@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="form_wrapper glass">
+    <div class="form_box">
+        <h2>Login</h2>
+        <form method="POST" class="login_form">
+            {% csrf_token %}
+            {% if form.errors %}
+            {{ form.errors }}
+            <div class="errors">Incorrect input. Check if email and password are correct</div>
+            {% endif %}
+            <div class="input_box">
+                <input type="email" name="email" class="" required>
+                <label class="form-label">Email</label>
+            </div>
+            <div class="input_box">
+                <input type="password" name="password" id="password" required>
+                <label class="form-label">Password</label>
+                <span class="icon material-symbols-outlined" id="togglePassword">visibility</span>
+            </div>
+            <button type="submit" class="btn_primary">Log In</button>
+            <p class="login-signup">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+        </form>
+    </div>
+</div>
+
+<script>
+    togglePassword = document.querySelector('#togglePassword');
+    password = document.querySelector('#password');
+
+    togglePassword.addEventListener("click", function(event) {
+        event.preventDefault();
+        const type = password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+
+        if (this.textContent == "visibility_off") {
+            this.textContent = "visibility";
+        }
+        else {
+            this.textContent = "visibility_off";
+        }
+    });
+</script>
+<script src="{% static 'js/process-cart-functions.js' %}"></script>
+{% endblock %}

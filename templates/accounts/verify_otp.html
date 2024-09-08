@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="verify_wrapper">
+    <div class="verify_content">
+        <h2>Please Verify Email</h2>
+        <p>Enter 6 digits code we send to your email address to verify your new account:</p>
+        {% if errors %}
+        <p style="color:lightcoral">{{ errors }}</p>
+        {% endif %}
+        <form method="POST" class="opt_form">
+            {% csrf_token %}
+            <input type="text" name="email_otp" maxlength="6">
+            <input type="submit" value="Verify OTP">
+        </form>
+        <form method="POST">
+            {% csrf_token %}
+            <button id="email_resend">Resend verification code</button>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/resend_verify_code.js' %}"></script>
+{% endblock %}

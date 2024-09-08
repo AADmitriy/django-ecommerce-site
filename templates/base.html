@@ -1,0 +1,132 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunpower Commerce {% block title %}{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <script src="{% static 'js/navbar-functions.js' %}"></script>
+    <script src="{% static 'js/footer-functions.js' %}"></script>
+
+    {% block links %}
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <ul class="sidebar">
+            <li onclick="hideElement('.sidebar')"><a href="#"><span class="material-symbols-outlined">close</span></a></li>
+            <li><a href="/">Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'user_page' %}">User Page</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Log in</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+        <nav>
+            <ul class="nav_links">
+                <li class="menu-toggle" onclick="showElement('.sidebar')"><a href="#"><span class="material-symbols-outlined">menu</span></a></li>
+                <li class="hideOnMobile"><a href="/">Home</a></li>
+                {% if user.is_authenticated %}
+                <li class="hideOnMobile"><a href="{% url 'user_page' %}">User Page</a></li>
+                {% else %}
+                <li class="hideOnMobile"><a href="{% url 'login' %}">Log in</a></li>
+                <li class="hideOnMobile"><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <h3 class="logo"><span class="material-symbols-outlined">
+            clear_day
+            </span> Sunpower Commerce</h4>
+        <a class="cart" href="#" onclick="showElement('.cart-sidebar')"><span class="material-symbols-outlined">
+            shopping_cart
+            </span>
+        </a>
+        <div class="cart-sidebar">
+            <div class="cart-header">
+                <p>Cart(<span id="cartTotalQuantity"></span>)</p>
+                <a href="#" onclick="hideElement('.cart-sidebar')"><span class="material-symbols-outlined">close</span></a>
+            </div>
+            <div class="cart-products">
+                <!-- For line item html, look at js file 'static/js/process-cart-functions.js' function 'loadCartItems()' -->
+            </div>
+            <div class="cart-footer">
+                <p class="price-info">Taxes and shipping are calculated at checkout</p>
+                <a class="submit_cart" href="{% url 'payment_page' %}">Order</a>
+            </div>
+        </div>
+    </header>
+    <div class="main-content">
+    {% block content %}
+    {% endblock %}
+    </div>
+    <footer>
+        <div class="footer_container">
+            <div class="footer-widget">
+                <h2 class="widget-title">About</h2>
+                <span class="widget-toggle"><span onclick="showNextElement(this)" class="material-symbols-outlined">add</span></span>
+                <p class="widget-data">Sunpower Commerce is seling all type of products from needles to yachts</p>
+            </div>
+            <div class="footer-widget">
+                <h2 class="widget-title">Sunpower Commerce <i class="fa-solid fa-sun"></i></h2>
+                <span class="widget-toggle"><span onclick="showNextElement(this)" class="material-symbols-outlined">add</span></span>
+                <ul class="widget-data">
+                    <li>Location: XYZ, California, India</li>
+                    <li>Telefone: -28012347803</li>
+                    <li>
+                        <ul class="contacts-list">
+                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                            <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                            <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-widget">
+                <h2 class="widget-title">Information</h2>
+                <span class="widget-toggle"><span onclick="showNextElement(this)" class="material-symbols-outlined">add</span></span>
+                <ul class="widget-data">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Return & Exchange</a></li>
+                    <li><a href="#">Shipping & Delivery</a></li>
+                    <li><a href="#">Private Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Copyright ©
+                <script type="text/javascript">document.write(new Date().getFullYear());</script>
+                All rights reserved. Created with Django
+            </p>
+        </div>
+    </footer>
+    <script>
+        const cartSidebar = document.querySelector('.cart-sidebar');
+        const cartToggle = document.querySelector('.cart');
+
+        document.onclick = function(e) {
+            if (cartSidebar.style.display != "none" && !cartSidebar.contains(e.target) && !cartToggle.contains(e.target)) {
+                e.preventDefault();
+                cartSidebar.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        var csrf_token = '{{csrf_token}}';
+    </script>
+</body>
+   
+
+</html>

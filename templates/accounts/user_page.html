@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load webp %}
+
+
+{% block content %}
+<div class="userpage-wrapper">
+    <div class="userpage-sidebar">
+        <ul>
+            <li onclick="toggleVisibility(this)" class="nav-link" link-type="userpage-body" style="display:none"><a href="#">User Information</a></li>
+            <li onclick="toggleVisibility(this)" class="nav-link" link-type="notifications-settings"><a href="#" >Notifications</a></li>
+            <li><a href="#">Transactions</a></li>
+            <li><a href='#'>Orders History</a></li>
+            <li><a href="#">Profile Settings</a></li>
+            <li><a href="{% url 'logout_page' %}">Log out</a></li>
+        </ul>
+    </div>
+    <div class="userpage-body">
+        <div class="account-info">
+            <img src="{% get_media_prefix %}images.png">
+            <div class="text-info">
+                <p class="account-username">{{ user.first_name }} {{user.last_name }}</p>
+                <p class="account-email">
+                    Email: {{ user.email }}
+                </p>
+            </div>
+            <button class="edit-account-info">
+                <span class="material-symbols-outlined">edit</span>
+            </button>
+        </div>
+        <div class="account-navigation">
+            <a onclick="toggleVisibility(this)" class="nav-link" link-type="userpage-body" href="#" style="display:none">User Information</a>
+            <a onclick="toggleVisibility(this)" class="nav-link" link-type="notifications-settings" href="#">Notifications</a>
+            <a href="#">Transactions</a>
+            <a href='#'>Orders History</a>
+            <a href="#">Profile Settings</a>
+            <a href="{% url 'logout_page' %}">Log out</a>
+        </div>
+        <div class="account-addresses">
+            <div class="addresses-container">
+                {% for address in user_addresses %}
+                <div class="address-mark">
+                    <p>
+                        <span class="material-symbols-outlined">location_on</span>
+                        {{address.country.name}}, {{address.city}}, {{address.address}}. ZIP code: {{address.zipCode}}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+            <button><span class="material-symbols-outlined">add</span> ADD NEW ADDRESS</button>
+        </div>
+        <div class="account-orders">
+            {% for order in user_orders %}
+            <div class="current-order">
+                <div class="current-order-header">
+                    <div>
+                        <p class="current-order-id">Order: {{order.id}} <span class="order-state">{{ order.status }}</span></p>
+                        <p class="current-order-date">Date: {{order.date}}</p>
+                    </div>
+                    <div class="current-order-buttons">
+                        <button class="cancel-order">Cancel Order</button>
+                        <button class="track-order">Reorder</button>
+                    </div>
+                </div>
+                <div class="current-order-info">
+                    <div >
+                        <p class="title">Contact</p>
+                        <ul>
+                            <li>Name: {{order.contact.firstname}} {{order.contact.lastname}}</li>
+                            <li>Phone: {{order.contact.phoneNumber}}</li>
+                            <li>Email: {{order.contact.email}}</li>
+                        </ul>
+                    </div>
+                    <div class="order-shipping-address">
+                        <p class="title">Shipping Address</p>
+                        <p>
+                            {{order.address.country.name}}, {{order.address.city}},
+                            {{order.address.address}}. ZIP code: {{order.address.zipCode}}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="title">Payment</p>
+                        <ul>
+                            <li>Payment method: {{ order.paycheck.payment_method }}</li>
+                            <li>Shipping fee: {{order.shipping_price}}$</li>
+                            <li>Total paid: {{order.total_price}}$</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="current-order-content">
+                    {% for cart_item in order.cart.cartitem_set.all %}
+                    <div class="ordered-product">
+                        <img src="{% webp cart_item.product.main_img_url %}" onerror="if (this.src != '{% get_media_prefix %}fallback.png') this.src = '{% get_media_prefix %}fallback.png';">
+                        <div class="ordered-product-description">
+                            <p class="text-info">
+                                {{cart_item.product.title}}
+                            </p>
+                            <p class="price-info">{{cart_item.quantity}}x = $ {{cart_item.total_price}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="current-order">
+                <div class="current-order-header">
+                    <div>
+                        <p class="current-order-id">Order: 3253 <span class="order-state">Pending</span></p>
+                        <p class="current-order-date">Date: 14 July 2024</p>
+                    </div>
+                    <div class="current-order-buttons">
+                        <button class="cancel-order">Cancel Order</button>
+                        <button class="track-order">Track Order</button>
+                    </div>
+                </div>
+                <div class="current-order-info">
+                    <div >
+                        <p class="title">Contact</p>
+                        <ul>
+                            <li>Name: Bob Jonhson</li>
+                            <li>Phone: 385479234</li>
+                            <li>Email: myemail@gmail.com</li>
+                        </ul>
+                    </div>
+                    <div class="order-shipping-address">
+                        <p class="title">Shipping Address</p>
+                        <p>Location, Address Wall streed 49</p>
+                    </div>
+                    <div>
+                        <p class="title">Payment</p>
+                        <ul>
+                            <li>Cart</li>
+                            <li>Shipping fee: 56$</li>
+                            <li>Total paid: 465$</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="current-order-content">
+                    <div class="ordered-product">
+                        <img src="."  onerror="if (this.src != '{% get_media_prefix %}fallback.png') this.src = '{% get_media_prefix %}fallback.png';">
+                        <div class="ordered-product-description">
+                            <p class="text-info">
+                                T-shirt with multiple colors
+                            </p>
+                            <p class="price-info">3x = $60</p>
+                        </div>
+                    </div>
+                    <div class="ordered-product">
+                        <img src="."  onerror="if (this.src != '{% get_media_prefix %}fallback.png') this.src = '{% get_media_prefix %}fallback.png';">
+                        <div class="ordered-product-description">
+                            <p class="text-info">
+                                T-shirt with multiple colors
+                            </p>
+                            <p class="price-info">3x = $60</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="notifications-settings">
+        <div class="account-navigation">
+            <a onclick="toggleVisibility(this)" class="nav-link" link-type="userpage-body" style="display:none" href="#">User Information</a>
+            <a onclick="toggleVisibility(this)" class="nav-link" link-type="notifications-settings" href="#">Notifications</a>
+            <a href="#">Transactions</a>
+            <a href='#'>Orders History</a>
+            <a href="#">Profile Settings</a>
+            <a href="{% url 'logout_page' %}">Log out</a>
+        </div>
+        <div class="setting-header">
+            <h3>Notifications Settings</h3>
+            <p>Select notification you want to receive</p>
+        </div>
+        <div class="setting-sections-list">
+            <div class="setting-section">
+                <div class="section-header">
+                    <h5>Security</h5>
+                    <p>Control the security alerts, which you will be notified of.</p>
+                </div>
+                <div class="settings-list">
+                    <div class="setting">
+                        <div class="setting-description">
+                            <h5>Unusual activity notifications</h5>
+                            <p>Get notification if your account is used from another devise</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting">
+                        <div class="setting-description">
+                            <h5>Unauthorized financial activity</h5>
+                            <p>Get notfication if unauthorized financial activity is detected</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="section-header">
+                    <h5>System</h5>
+                    <p>Enable system alert you will get.</p>
+                </div>
+                <div class="settings-list">
+                    <div class="setting">
+                        <div class="setting-description">
+                            <h5>Notify me about new features and updates</h5>
+                            <p></p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting">
+                        <div class="setting-description">
+                            <h5>Notify me about sales and discounts</h5>
+                            <p></p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function hideElementByClassName(className) {
+        var element = document.querySelector(`.${className}`);
+        element.style.display = "none";
+    }
+    function toggleVisibility(element) {
+        const linkType = element.getAttribute("link-type");
+        var linkedElement = document.querySelector(`.${element.getAttribute("link-type")}`);
+        linkedElement.style.display = "block";
+
+        var links = document.querySelectorAll(".nav-link")
+        links.forEach((link) => {
+            if (link.getAttribute('link-type') == linkType) {
+                link.style.display = "none";
+            }
+            else {
+                link.style.display = "block";
+                hideElementByClassName(link.getAttribute('link-type'));
+            }
+        });
+    }
+</script>
+<script src="{% static 'js/process-cart-functions.js' %}"></script>
+{% endblock %}
