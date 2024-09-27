@@ -115,6 +115,7 @@
     <script>
         const cartSidebar = document.querySelector('.cart-sidebar');
         const cartToggle = document.querySelector('.cart');
+        cartSidebar.style.display = "none";
 
         document.onclick = function(e) {
             if (cartSidebar.style.display != "none" && !cartSidebar.contains(e.target) && !cartToggle.contains(e.target)) {
